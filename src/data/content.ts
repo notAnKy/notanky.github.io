@@ -7,13 +7,13 @@ export const github = 'https://github.com/notAnKy';
 export const currentPortfolio = 'https://mohamed-ali-portfolio-omega.vercel.app/';
 
 export const districts: { id: DistrictId; name: string; x: number; z: number; color: number; short: string }[] = [
-  { id: 'gate', name: 'THE GATE', x: 0, z: 13, color: 0xe9b86e, short: '01 / ARRIVAL' },
-  { id: 'software', name: 'SOFTWARE DISTRICT', x: -29, z: -12, color: 0x6ebfc3, short: '02 / SYSTEMS' },
-  { id: 'vision', name: 'VISION LAB', x: 0, z: -39, color: 0x8bb6a7, short: '03 / PERCEPTION' },
-  { id: 'arcade', name: 'ARCADE DISTRICT', x: 30, z: -13, color: 0xf3a770, short: '04 / PLAY' },
-  { id: 'archive', name: 'ARCHIVE', x: 29, z: 19, color: 0xc9bf9d, short: '05 / THE JOURNEY' },
-  { id: 'lab', name: 'THE LAB', x: 0, z: 38, color: 0xb3a9d4, short: '06 / EXPERIMENTS' },
-  { id: 'tower', name: 'SIGNAL TOWER', x: -30, z: 19, color: 0xf2c47c, short: '07 / CONNECT' },
+  { id: 'gate', name: 'THE GATE', x: 0, z: 13, color: 0xec7959, short: '01 / ARRIVAL' },
+  { id: 'software', name: 'SOFTWARE DISTRICT', x: -29, z: -12, color: 0x39b9ae, short: '02 / SYSTEMS' },
+  { id: 'vision', name: 'VISION LAB', x: 0, z: -39, color: 0x8fbe87, short: '03 / PERCEPTION' },
+  { id: 'arcade', name: 'ARCADE DISTRICT', x: 30, z: -13, color: 0xf48787, short: '04 / PLAY' },
+  { id: 'archive', name: 'ARCHIVE', x: 29, z: 19, color: 0xd78b68, short: '05 / THE JOURNEY' },
+  { id: 'lab', name: 'THE LAB', x: 0, z: 38, color: 0xad92dc, short: '06 / EXPERIMENTS' },
+  { id: 'tower', name: 'SIGNAL TOWER', x: -30, z: 19, color: 0xf0bd50, short: '07 / CONNECT' },
 ];
 
 export const projects: Project[] = [

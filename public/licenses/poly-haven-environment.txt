@@ -1,0 +1,16 @@
+Kloppenheim 06 (Pure Sky) — Poly Haven
+
+Original: Greg Zaal. Sky edits: Jarod Guest.
+Source: https://polyhaven.com/a/kloppenheim_06_puresky
+License: CC0 1.0 Universal / public domain.
+License details: https://polyhaven.com/license
+CC0 deed: https://creativecommons.org/publicdomain/zero/1.0/
+
+Local file: public/environment/coastal-sunrise.hdr
+Downloaded: 2026-09-29
+Resolution: 1K HDR (1,173,154 bytes)
+Original filename: kloppenheim_06_puresky_1k.hdr
+MD5: 995d68b1656f26452572645c0ffe898b
+
+Used for image-based lighting and reflections. The visible sky, sea,
+island, buildings, rover, vegetation and animation are procedural.

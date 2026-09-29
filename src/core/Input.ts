@@ -33,6 +33,7 @@ export class Input {
     });
   }
   private typing() { const target = document.activeElement; return target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement; }
+  clear() { this.keys.clear(); this.mobile.clear(); this.refresh(); }
   private refresh() {
     const has = (keys: string[], action: string) => this.mobile.has(action) || keys.some(key => this.keys.has(key));
     this.drive.forward = has(['w', 'arrowup'], 'forward');

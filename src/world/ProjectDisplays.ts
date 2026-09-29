@@ -33,7 +33,7 @@ export function addProjectDisplays(parent: THREE.Object3D) {
     group.add(rearImagePlane);
     const image = new Image(); image.decoding = 'async';
     image.onload = () => {
-      const canvas = document.createElement('canvas'); canvas.width = 768; canvas.height = 432;
+      const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 576;
       const context = canvas.getContext('2d')!;
       const sourceRatio = image.naturalWidth / image.naturalHeight;
       const targetRatio = canvas.width / canvas.height;

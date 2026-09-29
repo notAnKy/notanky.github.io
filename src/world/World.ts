@@ -14,42 +14,17 @@ export class World {
   animated: Animated[] = [];
   tokens: { mesh: THREE.Group; x: number; z: number; id: number }[] = [];
   scanner = { x: 1, z: -35, radius: 3.2 };
-  private metal = mat(palette.metal, .58, .5);
+  private metal = mat(palette.metal, .18, .55);
   private dark = mat(palette.dark, .2, .9);
-  private amber = glow(palette.amber, 1.2);
-  private teal = glow(palette.teal, 1.2);
+  private amber = glow(palette.amber, .45);
+  private teal = glow(palette.teal, .45);
+  private signs: THREE.Sprite[] = [];
+  private signPosition = new THREE.Vector3();
 
   constructor(scene: THREE.Scene) {
     scene.add(this.group);
-    this.ground(); addEnvironment(this.group, this.animated); this.roads(); this.gate(); this.software(); this.vision(); this.arcade(); this.archive(); this.lab(); this.tower(); addDistrictDetail(this.group, this.animated); addProjectDisplays(this.group); this.details(); this.collectibles();
-  }
-
-  private ground() {
-    const sky = new THREE.Mesh(new THREE.SphereGeometry(270, 40, 24), new THREE.ShaderMaterial({
-      side: THREE.BackSide, depthWrite: false, fog: false,
-      vertexShader: 'varying vec3 vDirection; void main(){ vDirection = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-      fragmentShader: 'varying vec3 vDirection; void main(){ vec3 n = normalize(vDirection); float h = n.y; vec3 zenith = vec3(0.045, 0.072, 0.19); vec3 horizon = vec3(0.21, 0.39, 0.45); vec3 dusk = vec3(0.78, 0.37, 0.26); float glow = pow(max(dot(n, normalize(vec3(-.72, .20, -.52))), 0.0), 5.0); float band = exp(-pow((h + .02) * 7.0, 2.0)); vec3 color = mix(horizon, zenith, smoothstep(-.08, .72, h)); color = mix(color, dusk, glow * band * .65); gl_FragColor = vec4(color, 1.0); }',
-    }));
-    sky.renderOrder = -10; this.group.add(sky);
-    const water = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), new THREE.MeshStandardMaterial({ color: 0x176077, metalness: .38, roughness: .28 }));
-    water.rotation.x = -Math.PI / 2; water.position.y = -1.15; this.group.add(water);
-    const terrain = new THREE.Mesh(new THREE.CylinderGeometry(72, 76, 2.1, 20), mat(palette.ground, .05, 1));
-    terrain.position.y = -1.08; terrain.rotation.y = .14; terrain.receiveShadow = true; this.group.add(terrain);
-    const rim = new THREE.Mesh(new THREE.TorusGeometry(71.3, .2, 5, 100), glow(0x49666b, .3));
-    rim.rotation.x = Math.PI / 2; rim.position.y = .1; this.group.add(rim);
-    for (const r of [74.5, 78.5, 83]) { const wake = new THREE.Mesh(new THREE.TorusGeometry(r, .045, 3, 128), new THREE.MeshBasicMaterial({ color: 0x638a91, transparent: true, opacity: r === 74.5 ? .34 : .14 })); wake.rotation.x = Math.PI / 2; wake.position.y = -1.06; this.group.add(wake); }
-    const rng = seeded(17);
-    for (let i = 0; i < 32; i++) {
-      const a = i / 32 * Math.PI * 2;
-      const r = 84 + rng() * 18;
-      const h = 7 + rng() * 18;
-      const peak = new THREE.Mesh(new THREE.ConeGeometry(7 + rng() * 7, h, 4), mat(i % 3 ? 0x182932 : 0x20333a));
-      peak.position.set(Math.cos(a) * r, h / 2 - 1.6, Math.sin(a) * r); peak.rotation.y = a; this.group.add(peak);
-    }
-    const stars = new Float32Array(420 * 3);
-    for (let i = 0; i < 420; i++) { const a = rng() * 6.283, h = 20 + rng() * 100, r = 80 + rng() * 180; stars.set([Math.cos(a) * r, h, Math.sin(a) * r], i * 3); }
-    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(stars, 3));
-    this.group.add(new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xb4d1d1, size: .42, sizeAttenuation: true })));
+    addEnvironment(this.group, this.animated); this.roads(); this.gate(); this.software(); this.vision(); this.arcade(); this.archive(); this.lab(); this.tower(); addDistrictDetail(this.group, this.animated); addProjectDisplays(this.group); this.details(); this.collectibles();
+    this.group.traverse(object => { if (object instanceof THREE.Sprite && object.userData.labelSize) this.signs.push(object); });
   }
 
   private road(points: [number, number][], width = 7.2, closed = false) {
@@ -82,21 +57,21 @@ export class World {
       }
     }
     const addInstances = (matrices: THREE.Matrix4[], material: THREE.Material, instanceColors?: THREE.Color[]) => { if (!matrices.length) return; const mesh = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), material, matrices.length); matrices.forEach((m, i) => { mesh.setMatrixAt(i, m); if (instanceColors) mesh.setColorAt(i, instanceColors[i]); }); mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true; this.group.add(mesh); };
-    addInstances(stripeMatrices, glow(0xa8c2b9, .55));
+    addInstances(stripeMatrices, mat(0xf1e5ce, .05, .78));
     addInstances(edgeMatrices, mat(palette.roadEdge));
     addInstances(litEdgeMatrices, new THREE.MeshBasicMaterial({ color: 0xffffff }), litColors);
   }
 
   private roads() {
-    this.road([[0, 15], [-13, 10], [-28, -3], [-33, -13], [-23, -31], [0, -39], [24, -31], [33, -13], [35, 3], [29, 18], [15, 31], [0, 37], [-18, 32], [-30, 19], [-20, 10]], 7.2, true);
+    this.road([[0, 15], [-13, 10], [-28, -3], [-33, -13], [-23, -31], [0, -39], [24, -31], [33, -13], [35, 3], [29, 18], [15, 31], [0, 37], [-18, 32], [-39, 21], [-32, 10], [-20, 10]], 7.2, true);
     this.road([[0, 15], [0, 0], [-2, -18], [0, -39]], 5.8);
     this.road([[0, 15], [16, 14], [29, 18]], 5.5);
-    this.road([[-30, 19], [-14, 20], [0, 37]], 5.5);
+    this.road([[-39, 21], [-37, 13], [-23, 13], [-14, 20], [0, 37]], 5.5);
   }
 
   private platform(x: number, z: number, r: number, accent = this.amber) {
-    cylinder(this.group, x, .14, z, r, r + .55, .28, this.metal, 12);
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(r - .45, .09, 3, 48), accent); ring.rotation.x = Math.PI / 2; ring.position.set(x, .31, z); this.group.add(ring);
+    cylinder(this.group, x, .14, z, r, r + .3, .28, mat(0xeadac1, .05, .85), 48);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(r - .45, .06, 6, 64), accent); ring.rotation.x = Math.PI / 2; ring.position.set(x, .31, z); this.group.add(ring);
   }
 
   private beacon(x: number, z: number, color = this.amber, height = 3.4) {
@@ -109,7 +84,7 @@ export class World {
     box(this.group, 0, 6.9, 4, 12.7, 1, 1.8, this.metal);
     label(this.group, 'BUILD WORLD // ONLINE', 0, 7.02, 5.03, 10.5, .85, { bg: '#26353b', color: '#f3d8a1', size: 72, backZ: 2.97 });
     box(this.group, 15, 2.25, 0, 16, 4.5, .5, this.dark);
-    label(this.group, 'MOHAMED\nALI JEMMALI', 15, 2.55, .29, 15.3, 4.7, { size: 132, bg: '#101e25', backZ: -.29 });
+    label(this.group, 'MOHAMED\nALI JEMMALI', 15, 2.55, .29, 15.3, 4.7, { size: 132, bg: '#f4eedb', color: '#153f44', backZ: -.29 });
     label(this.group, 'SOFTWARE ENGINEERING  /  FULL-STACK  /  AI + VISION  /  GAMES', 15, .65, -3.2, 14.8, .9, { size: 55, bg: '#263038', color: '#eac58c' });
     this.collisions.push({ x: 15, z: 0, radius: 7 });
     this.platform(0, 13, 5, this.amber);
@@ -134,7 +109,7 @@ export class World {
         const dish = new THREE.Mesh(new THREE.ConeGeometry(1.8, .7, 12, 1, true), this.teal); dish.rotation.x = Math.PI; dish.position.set(s.x, 6.6, s.z); this.group.add(dish);
         this.animated.push((t) => { dish.rotation.y = t * .4; });
       } else if (s.kind === 2) {
-        for (let i = -2; i <= 2; i++) box(this.group, s.x + i * 1.05, 1.9 + Math.abs(i) * .2, s.z, .74, 3.8 + Math.abs(i) * .4, 4.3, i % 2 ? this.metal : mat(0x44565a));
+        for (let i = -2; i <= 2; i++) box(this.group, s.x + i * 1.05, 1.9 + Math.abs(i) * .2, s.z, .74, 3.8 + Math.abs(i) * .4, 4.3, i % 2 ? this.metal : mat(0x739b9c));
         box(this.group, s.x, 4.4, s.z, 6, .33, 5, this.teal);
       } else if (s.kind === 3) {
         box(this.group, s.x, 1.9, s.z, 5.7, 3.5, 4.5, this.metal);
@@ -216,8 +191,8 @@ export class World {
     box(this.group, 2, 2.1, 43.18, 4.2, 2, .12, glow(0x676078, .55));
     label(this.group, '> OPEN TERMINAL_', 2, 2.1, 43.28, 4.1, 1.85, { bg: '#161a26', color: '#e3cbfa', size: 80, backZ: 46.78 });
     experiments.forEach((name, i) => {
-      const a = i / experiments.length * Math.PI * 2, r = 13 + (i % 3) * 1.6;
-      const x = Math.sin(a) * r, z = 38 + Math.cos(a) * r;
+      const a = (i / (experiments.length - 1) - .5) * Math.PI, r = 15 + (i % 3) * 1.2;
+      const x = -2 + Math.sin(a) * r, z = 42 + Math.cos(a) * r;
       const h = 1.4 + (i % 3) * .5;
       cylinder(this.group, x, h / 2, z, .7, 1, h, this.metal, 6);
       cylinder(this.group, x, h + .14, z, .49, .49, .23, glow(0x9b8db8, .7), 6);
@@ -256,14 +231,6 @@ export class World {
   }
 
   private details() {
-    const rng = seeded(31);
-    for (let i = 0; i < 90; i++) {
-      const a = rng() * Math.PI * 2, r = 38 + rng() * 31, x = Math.cos(a) * r, z = Math.sin(a) * r;
-      if (Math.hypot(x, z) > 68) continue;
-      const h = .4 + rng() * 2.3;
-      const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(.8 + rng() * 1.4, 0), mat(i % 4 ? 0x28393d : 0x334447));
-      rock.position.set(x, h * .28, z); rock.scale.y = h / 2; rock.rotation.y = rng() * 6; this.group.add(rock);
-    }
     for (const d of districts) { this.beacon(d.x + 5, d.z + 5, glow(d.color, 1.5), 2.7); }
     label(this.group, 'SHIP IT', 15, 1.25, 53, 4.2, 1.4, { bg: '#2d362f', color: '#f4d9a9' });
   }
@@ -279,9 +246,21 @@ export class World {
     });
   }
 
+  updateLabels(camera: THREE.PerspectiveCamera) {
+    camera.updateMatrixWorld();
+    const verticalSpan = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    for (const sign of this.signs) {
+      const { width, height } = sign.userData.labelSize;
+      sign.getWorldPosition(this.signPosition);
+      const distance = this.signPosition.distanceTo(camera.position);
+      const depth = Math.max(.1, -this.signPosition.applyMatrix4(camera.matrixWorldInverse).z);
+      // Keep nearby signs legible without covering the architecture or the road.
+      const scale = Math.min(1, depth * verticalSpan * camera.aspect * (camera.aspect < 1 ? .7 : .36) / width, depth * verticalSpan * .065 / height);
+      sign.scale.set(width * scale, height * scale, 1);
+      sign.material.opacity = 1 - THREE.MathUtils.smoothstep(distance, 38, 76);
+    }
+  }
   update(time: number, dt: number, player: THREE.Vector3) { for (const fn of this.animated) fn(time, dt, player); }
   nearestDistrict(x: number, z: number) { return [...districts].sort((a, b) => Math.hypot(x - a.x, z - a.z) - Math.hypot(x - b.x, z - b.z))[0]; }
   nearestLandmark(x: number, z: number) { return landmarks.map(l => ({ landmark: l, distance: Math.hypot(x - l.x, z - l.z) })).sort((a, b) => a.distance - b.distance)[0]; }
 }
-
-function seeded(seed: number) { let s = seed; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
