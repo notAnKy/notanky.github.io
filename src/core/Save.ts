@@ -1,7 +1,7 @@
 export type Quality = 'low' | 'medium' | 'high';
 export type SaveData = { visited: string[]; discovered: string[]; tokens: number[]; quality: Quality | 'auto'; audio: boolean };
 const KEY = 'build-world-v1';
-const defaults: SaveData = { visited: [], discovered: [], tokens: [], quality: 'auto', audio: false };
+const defaults: SaveData = { visited: [], discovered: [], tokens: [], quality: 'low', audio: true };
 export class Save {
   data: SaveData;
   constructor() {

@@ -129,7 +129,7 @@ export class Game {
     }
   }
   private resize() { this.camera.aspect = innerWidth / innerHeight; this.camera.updateProjectionMatrix(); this.renderer.setSize(innerWidth, innerHeight); this.composer?.setSize(innerWidth, innerHeight); }
-  private enter() { this.active = true; this.input.enabled = true; this.save.visit('gate'); this.lastDistrict = 'gate'; this.ui.setDistrict('gate'); }
+  private enter() { this.audio.setEnabled(this.save.data.audio); this.active = true; this.input.enabled = true; this.save.visit('gate'); this.lastDistrict = 'gate'; this.ui.setDistrict('gate'); }
   private travel(id: DistrictId) {
     const arrivals: Record<DistrictId, [number, number, number]> = {
       gate: [0, 18, Math.PI], software: [-28, -8, Math.PI], vision: [0, -33, Math.PI],

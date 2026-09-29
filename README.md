@@ -62,7 +62,7 @@ Clip and Tunisian Plate Recognition currently have no verified public demo URL, 
 
 Quick View is a keyboard-navigable HTML version of the complete portfolio: introduction, projects, experience, education, skills, and contact. It is also shown if WebGL initialization fails. UI dialogs are keyboard accessible, and the experience responds to `prefers-reduced-motion`.
 
-Visited districts, discovered project files, five build tokens, graphics mode, and sound preference are saved locally in `localStorage`. Sound begins muted. Quick View includes a reset progress button. Graphics can be set to Auto, Low, Medium, or High; Auto selects a lower render resolution on coarse-pointer or lower-core devices.
+Visited districts, discovered project files, five build tokens, graphics mode, and sound preference are saved locally in `localStorage`. New visitors start with sound on and Low graphics quality. Audio starts when they enter the world, after the browser's required interaction. Returning visitors keep their saved settings. Quick View includes a reset progress button. Graphics can be set to Auto, Low, Medium, or High; Auto selects a lower render resolution on coarse-pointer or lower-core devices.
 
 ## Architecture
 
